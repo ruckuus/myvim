@@ -1,9 +1,2 @@
----
-
-myvim - vim setup for things that I love
-
----
-
-# Quick Start Guide
-
-Run install.sh
+# myvim - vim setup for things that I love
+# Run install.sh
