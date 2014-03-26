@@ -5,7 +5,7 @@ echo "Backups available in ~/vim-dir-backup"
 
 BACKUPDIR=$HOME/vim-dir-backup
 VIMDIR=$HOME/.vim
-mkdir -p $BACKUPDIR
+mkdir -p $BACKUPDIR $VIMDIR
 echo "Backing up"
 cp -av $VIMDIR/* $BACKUPDIR
 rm -rfv $VIMDIR/*
