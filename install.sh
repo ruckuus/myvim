@@ -10,5 +10,6 @@ echo "Backing up"
 cp -av $VIMDIR/* $BACKUPDIR
 rm -rfv $VIMDIR/*
 cp -av $(pwd)/* $VIMDIR
+ln -s $HOME/.vim/vimrc $HOME/.vimrc
 
 echo "Done"
