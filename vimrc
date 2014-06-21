@@ -116,7 +116,7 @@ imap <C-F> <C-R>=expand("%")<CR>
 vmap P p :call setreg('"', getreg('0')) <CR>
 
 " Display extra whitespace
-set list listchars=tab:»·,trail:·
+" set list listchars=tab:»·,trail:·
 
 " Edit routes
 command! Rroutes :e config/routes.rb
@@ -196,3 +196,19 @@ autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
 autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
 ""improve autocomplete menu color
 highlight Pmenu ctermbg=238 gui=bold
+
+" Disable valadoc syntax highlight
+" "let vala_ignore_valadoc = 1
+"
+" " Enable comment strings
+let vala_comment_strings = 1
+"
+" " Highlight space errors
+let vala_space_errors = 1
+" " Disable trailing space errors
+" "let vala_no_trail_space_error = 1
+" " Disable space-tab-space errors
+let vala_no_tab_space_error = 1
+"
+" " Minimum lines used for comment syncing (default 50)
+" "let vala_minlines = 120
