@@ -1,214 +1,117 @@
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
 set nocompatible
+filetype off
 
-" don't allow backspacing over everything in insert mode
-set backspace=
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
-set nobackup
-set nowritebackup
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
+" Let Vundle manage Vundle
+Bundle 'gmarik/vundle'
 
-" Don't use Ex mode, use Q for formatting
-map Q gq
+" My Bundles
+Bundle 'tpope/vim-sensible'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-rake'
+Bundle 'nanotech/jellybeans.vim'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/nerdtree'
+Bundle 'kien/ctrlp.vim'
+Bundle 'rking/ag.vim'
+Bundle 'kana/vim-textobj-user'
+Bundle 'nelstrom/vim-textobj-rubyblock'
+Bundle 'slim-template/vim-slim'
 
-" This is an alternative that also works in block mode, but the deleted
-" text is lost and it only works for putting the current register.
-"vnoremap p "_dp
+filetype plugin indent on
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
-  syntax on
-  set nohlsearch
-endif
+let mapleader=","
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
+color jellybeans
 
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
-
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal g`\"" |
-    \ endif
-
-  augroup END
-
-else
-
-  set autoindent		" always set autoindenting on
-
-endif " has("autocmd")
-
-" if has("folding")
-  " set foldenable
-  " set foldmethod=syntax
-  " set foldlevel=1
-  " set foldnestmax=2
-  " set foldtext=strpart(getline(v:foldstart),0,50).'\ ...\ '.substitute(getline(v:foldend),'^[\ #]*','','g').'\ '
-" endif
-
-" Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
+set cursorline
 set expandtab
-
-" Always display the status line
-set laststatus=2
-
-" <Space> is the leader character
-let mapleader = " "
-
-" Edit the README_FOR_APP (makes :R commands work)
-map <Leader>R :e doc/README_FOR_APP<CR>
-
-" Hide search highlighting
-map <Leader>l :set invhls <CR>
-
-" Opens an edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>e
-map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-" Opens a tab edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>t
-map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
-
-" Inserts the path of the currently edited file into a command
-" Command mode: Ctrl+P
-cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-
-" Maps autocomplete to tab
-imap <Tab> <C-P>
-
-" Duplicate a selection
-" Visual mode: D
-vmap D y'>p
-
-" For Haml
-au! BufRead,BufNewFile *.haml         setfiletype haml
-
-" No Help, please
-nmap <F1> <Esc>
-
-" Press ^F from insert mode to insert the current file name
-imap <C-F> <C-R>=expand("%")<CR>
-
-" Press Shift+P while in visual mode to replace the selection without
-" overwriting the default register
-vmap P p :call setreg('"', getreg('0')) <CR>
-
-" Display extra whitespace
-" set list listchars=tab:»·,trail:·
-
-" Edit routes
-command! Rroutes :e config/routes.rb
-command! RTroutes :tabe config/routes.rb
-
-" Local config
-if filereadable(".vimrc.local")
-  source .vimrc.local
-endif
-
-" Use Ack instead of Grep when available
-if executable("ack")
-  set grepprg=ack\ -H\ --nogroup\ --nocolor
-endif
-
-" Color scheme
-"colorscheme vividchalk
-highlight NonText guibg=#060606
-highlight Folded  guibg=#0A0A0A guifg=#9090D0
-
-" Numbers
+set modelines=0
+set shiftwidth=2
+set clipboard=unnamed
+set synmaxcol=128
+set ttyscroll=10
+set encoding=utf-8
+set tabstop=2
+set nowrap
 set number
-set numberwidth=5
+set expandtab
+set nowritebackup
+set noswapfile
+set nobackup
+set hlsearch
+set ignorecase
+set smartcase
 
-" Snippets are activated by Shift+Tab
-let g:snippetsEmu_key = "<S-Tab>"
+" Automatic formatting
+autocmd BufWritePre *.rb :%s/\s\+$//e
+autocmd BufWritePre *.go :%s/\s\+$//e
+autocmd BufWritePre *.haml :%s/\s\+$//e
+autocmd BufWritePre *.html :%s/\s\+$//e
+autocmd BufWritePre *.scss :%s/\s\+$//e
+autocmd BufWritePre *.slim :%s/\s\+$//e
 
-" Tab completion options
-set wildmode=list:longest,list:full
-set complete=.,w,t
+au BufNewFile * set noeol
+au BufRead,BufNewFile *.go set filetype=go
 
-" Tags
-let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
+" No show command
+autocmd VimEnter * set nosc
 
-" Window navigation
-nmap <C-J> <C-W><C-J>
-nmap <C-K> <C-W><C-K>
+" Quick ESC
+imap jj <ESC>
 
-" Rails configuration
-autocmd User Rails Rnavcommand step features/step_definitions -glob=**/* -suffix=_steps.rb
-autocmd User Rails Rnavcommand config config -glob=**/* -suffix=.rb -default=routes
-autocmd User Rails map <Leader>p :Rstep 
-autocmd User Rails map <Leader>sp :RSstep 
-autocmd User Rails map <Leader>tp :RTstep 
-autocmd User Rails map <Leader>m :Rmodel 
-autocmd User Rails map <Leader>c :Rcontroller 
-autocmd User Rails map <Leader>v :Rview 
-autocmd User Rails map <Leader>u :Runittest 
-autocmd User Rails map <Leader>f :Rfunctionaltest 
-autocmd User Rails map <Leader>i :Rintegrationtest 
-autocmd User Rails map <Leader>h :Rhelper 
-autocmd User Rails map <Leader>tm :RTmodel 
-autocmd User Rails map <Leader>tc :RTcontroller 
-autocmd User Rails map <Leader>tv :RTview 
-autocmd User Rails map <Leader>tu :RTunittest 
-autocmd User Rails map <Leader>tf :RTfunctionaltest 
-autocmd User Rails map <Leader>ti :RTintegrationtest 
-autocmd User Rails map <Leader>sm :RSmodel 
-autocmd User Rails map <Leader>sc :RScontroller 
-autocmd User Rails map <Leader>sv :RSview 
-autocmd User Rails map <Leader>su :RSunittest 
-autocmd User Rails map <Leader>sf :RSfunctionaltest 
-autocmd User Rails map <Leader>si :RSintegrationtest 
-autocmd User Rails map <Leader>g :Rconfig 
-autocmd User Rails map <Leader>sg :RSconfig 
-autocmd User Rails map <Leader>tg :RTconfig 
+" Jump to the next row on long lines
+map <Down> gj
+map <Up>   gk
+nnoremap j gj
+nnoremap k gk
 
-"nnoremap <Left> :echoe "Use h"<CR>
-"nnoremap <Right> :echoe "Use l"<CR>
-"nnoremap <Up> :echoe "Use k"<CR>
-"nnoremap <Down> :echoe "Use j"<CR>
+" format the entire file
+nmap <leader>fef ggVG=
 
-"ruby
-autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
-autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
-autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
-autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-""improve autocomplete menu color
-highlight Pmenu ctermbg=238 gui=bold
+" Open new buffers
+nmap <leader>s<left>   :leftabove  vnew<cr>
+nmap <leader>s<right>  :rightbelow vnew<cr>
+nmap <leader>s<up>     :leftabove  new<cr>
+nmap <leader>s<down>   :rightbelow new<cr>
 
-" Disable valadoc syntax highlight
-" "let vala_ignore_valadoc = 1
-"
-" " Enable comment strings
-let vala_comment_strings = 1
-"
-" " Highlight space errors
-let vala_space_errors = 1
-" " Disable trailing space errors
-" "let vala_no_trail_space_error = 1
-" " Disable space-tab-space errors
-let vala_no_tab_space_error = 1
-"
-" " Minimum lines used for comment syncing (default 50)
-" "let vala_minlines = 120
+" Tab between buffers
+noremap <tab> <c-w><c-w>
+
+" Switch between last two buffers
+nnoremap <leader><leader> <C-^>
+
+" Resize buffers
+if bufwinnr(1)
+  nmap Ä <C-W><<C-W><
+  nmap Ö <C-W>><C-W>>
+  nmap ö <C-W>-<C-W>-
+  nmap ä <C-W>+<C-W>+
+endif
+
+" NERDTree
+nmap <leader>n :NERDTreeToggle<CR>
+let NERDTreeHighlightCursorline=1
+let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg']
+
+" Syntastic
+let g:syntastic_mode_map = { 'mode': 'passive' }
+let g:syntastic_ruby_exec = '~/.rvm/rubies/ruby-2.0.0-p0/bin/ruby'
+
+" CtrlP
+nnoremap <silent> t :CtrlP<cr>
+let g:ctrlp_working_path_mode = 2
+let g:ctrlp_by_filename = 1
+let g:ctrlp_max_files = 600
+let g:ctrlp_max_depth = 5
+
+" Go programming
+set rtp+=/usr/local/Cellar/go/1.0.3/misc/vim
+
+" Quit with :Q
+command -nargs=0 Quit :qa!
